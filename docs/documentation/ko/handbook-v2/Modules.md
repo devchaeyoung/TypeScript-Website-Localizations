@@ -1,8 +1,8 @@
 ---
 title: Modules
 layout: docs
-permalink: /docs/handbook/2/modules.html
-oneline: "How JavaScript handles communicating across file boundaries."
+permalink: /ko/docs/handbook/2/modules.html
+oneline: "JavaScript가 파일 간 상호작용을 처리하는 방법."
 ---
 
 JavaScript는 코드를 모듈화하는 다양한 방법들의 오랜 역사를 가지고 있습니다.
