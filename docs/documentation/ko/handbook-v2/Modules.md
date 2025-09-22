@@ -201,7 +201,7 @@ TypeScript는 타입 전용 import를 선언하기 위해 두 가지 개념으�
 
 ###### `import type`
 
-_오직_ 타입만 import할 수 있는 import문입니다:
+*오직* 타입만 import할 수 있는 import문입니다:
 
 ```ts twoslash
 // @filename: animal.ts
@@ -240,7 +240,7 @@ const name = createCatName();
 
 #### CommonJS 동작에 대응하는 ES Module 문법
 
-TypeScript에는 CommonJS와 AMD의 `require`와 _직접적으로_ 대응하는 ES Module 문법이 있습니다. _대부분의 경우_ ES Module을 사용한 import는 해당 환경의 `require`과 비슷하게 동작하지만, 이 문법을 사용하면 TypeScript 파일이 CommonJS 출력과 1:1로 매칭됩니다:
+TypeScript에는 CommonJS와 AMD의 `require`와 *직접적으로* 대응하는 ES Module 문법이 있습니다. *대부분의 경우* ES Module을 사용한 import는 해당 환경의 `require`과 비슷하게 동작하지만, 이 문법을 사용하면 TypeScript 파일이 CommonJS 출력과 1:1로 매칭됩니다:
 
 ```ts twoslash
 /// <reference types="node" />
