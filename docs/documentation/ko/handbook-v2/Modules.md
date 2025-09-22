@@ -113,9 +113,9 @@ const absPhi = absolute(phi);
 //    ^?
 ```
 
-### Additional Import Syntax
+### 추가적인 import 문법
 
-An import can be renamed using a format like `import {old as new}`:
+import 시 `import {old as new}` 형태로 이름을 변경할 수 있습니다:
 
 ```ts twoslash
 // @filename: maths.ts
@@ -128,7 +128,7 @@ console.log(π);
 //          ^?
 ```
 
-You can mix and match the above syntax into a single `import`:
+위의 문법들을 하나의 `import`문에서 함께 섞어서 사용할 수도 있습니다:
 
 ```ts twoslash
 // @filename: maths.ts
@@ -144,8 +144,7 @@ RandomNumberGenerator;
 console.log(π);
 //          ^?
 ```
-
-You can take all of the exported objects and put them into a single namespace using `* as name`:
+`* as name` 문법을 사용하면 export된 모든 객체를 하나의 namespace로 모을 수 있습니다:
 
 ```ts twoslash
 // @filename: maths.ts
@@ -166,7 +165,7 @@ const positivePhi = math.absolute(math.phi);
 //    ^?
 ```
 
-You can import a file and _not_ include any variables into your current module via `import "./file"`:
+import "./file"처럼 작성하면 현재 모듈 범위로 어떤 식별자도 들여오지 않고 파일만 로드할 수 있습니다:
 
 ```ts twoslash
 // @filename: maths.ts
@@ -178,11 +177,11 @@ import "./maths.js";
 console.log("3.14");
 ```
 
-In this case, the `import` does nothing. However, all of the code in `maths.ts` was evaluated, which could trigger side-effects which affect other objects.
+이 경우 `import`문 자체는 아무것도 하지 않는 것처럼 보입니다. 하지만 `maths.ts`의 모든 코드가 실행되기 때문에, 다른 객체에 영향을 주는 부수 효과<sup>side-effect</sup>를 발생시킬 수 있습니다.
 
-#### TypeScript Specific ES Module Syntax
+#### TypeScript 전용 ES Module 문법
 
-Types can be exported and imported using the same syntax as JavaScript values:
+타입은 JavaScript 값과 동일한 문법으로 export/import할 수 있습니다:
 
 ```ts twoslash
 // @filename: animal.ts
@@ -198,11 +197,11 @@ import { Cat, Dog } from "./animal.js";
 type Animals = Cat | Dog;
 ```
 
-TypeScript has extended the `import` syntax with two concepts for declaring an import of a type:
+TypeScript는 타입 전용 import를 선언하기 위해 두 가지 개념으로 import 문법을 확장했습니다:
 
 ###### `import type`
 
-Which is an import statement which can _only_ import types:
+_오직_ 타입만 import할 수 있는 import문입니다:
 
 ```ts twoslash
 // @filename: animal.ts
@@ -220,9 +219,9 @@ import type { createCatName } from "./animal.js";
 const name = createCatName();
 ```
 
-###### Inline `type` imports
+###### 인라인<sup>inline</sup> `type` imports
 
-TypeScript 4.5 also allows for individual imports to be prefixed with `type` to indicate that the imported reference is a type:
+TypeScript 4.5부터는 개별 import 앞에 `type`을 붙여서 해당 import가 type이라는 것을 표시할 수 있습니다:
 
 ```ts twoslash
 // @filename: animal.ts
@@ -237,11 +236,11 @@ export type Animals = Cat | Dog;
 const name = createCatName();
 ```
 
-Together these allow a non-TypeScript transpiler like Babel, swc or esbuild to know what imports can be safely removed.
+이런 문법들을 통해 Babel, swc, esbuild 같은 TypeScript가 아닌<sup>non-TypeScript</sup> 트랜스파일러들도 안전하게 제거할 수 있는 import문이 무엇인지 알 수 있습니다.
 
-#### ES Module Syntax with CommonJS Behavior
+#### CommonJS 동작에 대응하는 ES Module 문법
 
-TypeScript has ES Module syntax which _directly_ correlates to a CommonJS and AMD `require`. Imports using ES Module are _for most cases_ the same as the `require` from those environments, but this syntax ensures you have a 1 to 1 match in your TypeScript file with the CommonJS output:
+TypeScript에는 CommonJS와 AMD의 `require`와 _직접적으로_ 대응하는 ES Module 문법이 있습니다. _대부분의 경우_ ES Module을 사용한 import는 해당 환경의 `require`과 비슷하게 동작하지만, 이 문법을 사용하면 TypeScript 파일이 CommonJS 출력과 1:1로 매칭됩니다:
 
 ```ts twoslash
 /// <reference types="node" />
@@ -250,16 +249,17 @@ TypeScript has ES Module syntax which _directly_ correlates to a CommonJS and AM
 import fs = require("fs");
 const code = fs.readFileSync("hello.ts", "utf8");
 ```
+이 문법에 대한 자세한 내용은 [modules reference page](/docs/handbook/modules.html#export--and-import--require)에서 확인할 수 있습니다.
 
-You can learn more about this syntax in the [modules reference page](/docs/handbook/modules.html#export--and-import--require).
+## CommonJS 문법
 
-## CommonJS Syntax
+npm의 대부분 모듈은 CommonJS 형식을 사용합니다. 위의 ES Modules 문법을 사용해서 작성하더라도, CommonJS 문법이 어떻게 동작하는지 간단히 이해하면 디버깅할 때 도움이 됩니다.
 
-CommonJS is the format which most modules on npm are delivered in. Even if you are writing using the ES Modules syntax above, having a brief understanding of how CommonJS syntax works will help you debug easier.
-
-#### Exporting
+#### Export하기
 
 Identifiers are exported via setting the `exports` property on a global called `module`.
+
+`module`이라는 전역 객체의 `exports` 프로퍼티를 설정해서 식별자를 내보내기<sup>export</sup>합니다.
 
 ```ts twoslash
 /// <reference types="node" />
@@ -277,7 +277,7 @@ module.exports = {
 };
 ```
 
-Then these files can be imported via a `require` statement:
+이후 해당 파일들을 `require`문으로 가져오기<sup>import</sup>할 수 있습니다:
 
 ```ts twoslash
 // @module: commonjs
@@ -301,7 +301,7 @@ maths.pi;
 //    ^?
 ```
 
-Or you can simplify a bit using the destructuring feature in JavaScript:
+JavaScript의 구조 분해 할당<sup>destructuring</sup>을 이용하면 좀 더 간단하게 작성할 수도 있습니다:
 
 ```ts twoslash
 // @module: commonjs
@@ -325,34 +325,34 @@ squareTwo;
 // ^?
 ```
 
-### CommonJS and ES Modules interop
+### CommonJS와 ES Modules 호환성
 
-There is a mis-match in features between CommonJS and ES Modules regarding the distinction between a default import and a module namespace object import. TypeScript has a compiler flag to reduce the friction between the two different sets of constraints with [`esModuleInterop`](/tsconfig#esModuleInterop).
+CommonJS와 ES Modules 사이에는 기본 내보내기<sup>default import</sup>와 모듈 네임스페이스 객체<sup>module namespace object</sup> 내보내기를 구분하는 방식에서의 기능적 차이가 있습니다. TypeScript는 두 가지 제약 조건 사이의 마찰을 줄이기 위해 [`esModuleInterop`](/tsconfig#esModuleInterop) 컴파일러 플래그를 제공합니다.
 
-## TypeScript's Module Resolution Options
+## TypeScript의 모듈 해석<sup>Module Resolution</sup> 옵션
 
-Module resolution is the process of taking a string from the `import` or `require` statement, and determining what file that string refers to.
+모듈 해석<sup>Module resolution</sup>은 `import`나 `require`문의 문자열을 받아서 그 문자열이 어떤 파일을 가리키는지 결정하는 과정입니다.
 
-TypeScript includes two resolution strategies: Classic and Node. Classic, the default when the compiler option [`module`](/tsconfig#module) is not `commonjs`, is included for backwards compatibility.
-The Node strategy replicates how Node.js works in CommonJS mode, with additional checks for `.ts` and `.d.ts`.
+TypeScript에는 두 가지 해석<sup>resolution</sup> 전략이 있습니다: 클래식<sup>Classic</sup>과 노드<sup>Node</sup>입니다. Classic은 컴파일러 옵션 [`module`](/tsconfig#module)이 `commonjs`가 아닐 때의 기본값으로, 하위 호환성을 위해 포함되어 있습니다.
+Node 전략은 Node.js가 CommonJS 모드에서 동작하는 방식을 재현하되, `.ts`와 `.d.ts`에 대한 추가 검사를 포함합니다.
 
-There are many TSConfig flags which influence the module strategy within TypeScript: [`moduleResolution`](/tsconfig#moduleResolution), [`baseUrl`](/tsconfig#baseUrl), [`paths`](/tsconfig#paths), [`rootDirs`](/tsconfig#rootDirs).
+TypeScript 내에서 module 전략에 영향을 주는 TSConfig 플래그들이 많이 있습니다: [`moduleResolution`](/tsconfig#moduleResolution), [`baseUrl`](/tsconfig#baseUrl), [`paths`](/tsconfig#paths), [`rootDirs`](/tsconfig#rootDirs).
 
-For the full details on how these strategies work, you can consult the [Module Resolution](/docs/handbook/modules/reference.html#the-moduleresolution-compiler-option) reference page.
+이런 전략들이 어떻게 동작하는지에 대한 전체 세부사항은 [Module Resolution](/docs/handbook/modules/reference.html#the-moduleresolution-compiler-option) 레퍼런스 페이지에서 확인할 수 있습니다.
 
-## TypeScript's Module Output Options
+## TypeScript의 모듈 출력 옵션<sup>Module Output Options</sup>
 
-There are two options which affect the emitted JavaScript output:
+생성되는 JavaScript 출력에 영향을 주는 두 가지 옵션이 있습니다:
 
-- [`target`](/tsconfig#target) which determines which JS features are downleveled (converted to run in older JavaScript runtimes) and which are left intact
-- [`module`](/tsconfig#module) which determines what code is used for modules to interact with each other
+- [`target`](/tsconfig#target): 어떤 JS 기능을 다운레벨링<sup>downlevel</sup>(구 버전 JavaScript 런타임에서 실행되도록 변환)할지와 어떤 기능을 그대로 둘지 결정합니다
+- [`module`](/tsconfig#module): 모듈들이 서로 상호작용할 때 사용할 코드를 결정합니다
 
-Which [`target`](/tsconfig#target) you use is determined by the features available in the JavaScript runtime you expect to run the TypeScript code in. That could be: the oldest web browser you support, the lowest version of Node.js you expect to run on or could come from unique constraints from your runtime - like Electron for example.
+어떤 [`target`](/tsconfig#target)을 사용할지는 TypeScript 코드가 실행될 JavaScript 런타임 지원 범위에 따라 달라집니다. 예를 들어: 지원해야 하는 가장 오래된 웹 브라우저, 실행할 최소 Node.js 버전, 혹은 Electron 같은 특정 런타임의 제약 조건이 기준이 될 수 있습니다.
 
-All communication between modules happens via a module loader, the compiler option [`module`](/tsconfig#module) determines which one is used.
-At runtime the module loader is responsible for locating and executing all dependencies of a module before executing it.
+모든 모듈 간 통신은 모듈 로더<sup>module loader</sup>를 통해 이루어지며, 컴파일러 옵션 [`module`](/tsconfig#module)이 어떤 로더<sup>loader</sup>을 사용할지 결정합니다.
+런타임에 모듈 로더는 모듈을 실행하기 전에 해당 모듈의 모든 의존성을 찾아서 실행하는 역할을 담당합니다.
 
-For example, here is a TypeScript file using ES Modules syntax, showcasing a few different options for [`module`](/tsconfig#module):
+예를 들어, 아래는 ES Modules 문법을 사용하는 TypeScript 파일이며, [`module`](/tsconfig#module)의 몇 가지 다른 입출력 방식을 보여줍니다:
 
 ```ts twoslash
 // @filename: constants.ts
@@ -397,10 +397,10 @@ import { valueOfPi } from "./constants.js";
 export const twoPi = valueOfPi * 2;
 ```
 
-> Note that ES2020 is effectively the same as the original `index.ts`.
+> 참고: ES2020은 기본적으로 원본 `index.ts`와 동일합니다.
 
-You can see all of the available options and what their emitted JavaScript code looks like in the [TSConfig Reference for `module`](/tsconfig#module).
+사용 가능한 모든 옵션과 각 옵션에서 JavaScript 코드가 어떻게 보이는지는 [`module`에 대한 TSConfig 레퍼런스](/tsconfig#module)에서 확인할 수 있습니다.
 
-## TypeScript namespaces
+## TypeScript 네임스페이스<sup>namespace</sup>
 
-TypeScript has its own module format called `namespaces` which pre-dates the ES Modules standard. This syntax has a lot of useful features for creating complex definition files, and still sees active use [in DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped). While not deprecated, the majority of the features in namespaces exist in ES Modules and we recommend you use that to align with JavaScript's direction. You can learn more about namespaces in [the namespaces reference page](/docs/handbook/namespaces.html).
+TypeScript에는 ES Modules 표준보다 먼저 나온 `namespaces`라는 자체 모듈 형식이 있습니다. 이 문법은 복잡한 정의 파일<sup>definition files</sup>을 만들 때 유용한 기능들을 많이 제공하며, 지금도 [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)에서 활발하게 사용되고 있습니다. 사용 중단<sup>deprecated</sup>상태는 아니지만, namespaces의 대부분 기능이 ES Modules에도 존재하므로 JavaScript의 방향성과 일치하도록 ES Modules 사용을 권장합니다. namespaces에 대한 자세한 내용은 [namespaces 레퍼런스 페이지](/docs/handbook/namespaces.html)에서 확인할 수 있습니다.
